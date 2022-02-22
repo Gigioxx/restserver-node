@@ -54,10 +54,16 @@ const postUsers = async( req, res = response ) => {
     });
 }
 
-const deleteUsers = ( req, res = response ) => {
-    res.json({
-        message: 'delete API - controller'
-    });
+const deleteUsers = async( req, res = response ) => {
+
+    const { id } = req.params;
+
+    // Delete user from db PERMANENTLY
+    // const user = await User.findByIdAndDelete( id );
+
+    const user = await User.findByIdAndUpdate( id, { status: false } );
+
+    res.json( user );
 }
 
 const patchUsers = ( req, res = response ) => {
