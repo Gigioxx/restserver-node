@@ -20,9 +20,7 @@ const getUsers = ( req = request, res = response ) => {
 const putUsers = async( req, res = response ) => {
 
     const { id } = req.params;
-    const { password, google, email, ...data } = req.body;
-
-    // Validar contr abase de datos
+    const { _id, password, google, email, ...data } = req.body;
 
     if ( password ) {
         // Password encryption

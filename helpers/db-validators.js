@@ -17,7 +17,16 @@ const emailExists = async(email = '') => {
     }
 }
 
+const userByIdExists = async( id ) => {
+
+    const userExists = await User.findById( id );
+    if ( !userExists ) {
+        throw new Error(`Id: ${ id } does not exist`);
+    }
+}
+
 module.exports = {
     isValidRole,
-    emailExists
+    emailExists,
+    userByIdExists
 }
