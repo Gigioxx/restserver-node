@@ -3,7 +3,8 @@ const { check } = require('express-validator');
 
 const { validateJWT, fieldsValidation } = require('../middlewares');
 
-const { getCategories, createCategorie } = require('../controllers/categories');
+const { getCategories, getCategorieById, createCategorie } = require('../controllers/categories');
+const { categorieByIdExists } = require('../helpers/db-validators');
 
 const router = Router();
 
@@ -14,10 +15,10 @@ router.get('/', getCategories );
 
 // Obtain a categorie - public
 router.get('/:id', [
-    // check('id').custom( categorieExists )
-], ( req, res ) => {
-    res.json('get - id');
-});
+    check('id', 'ID is not a valid MongoID').isMongoId(),
+    check('id').custom( categorieByIdExists ),
+    fieldsValidation
+], getCategorieById );
 
 // Create categorie - private - only with valid token
 router.post('/', [

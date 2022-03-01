@@ -21,8 +21,15 @@ const getCategories = async( req, res = response ) => {
 
 }
 
-// getCategorie - populate
+const getCategorieById = async( req, res = response ) => {
 
+    const { id } = req.params;
+    const categorie = await Categorie.findById( id )
+                            .populate( 'user', 'name');
+
+    res.json( categorie );
+
+}
 
 const createCategorie = async( req, res = response ) => {
 
@@ -57,7 +64,7 @@ const createCategorie = async( req, res = response ) => {
 
 module.exports = {
     getCategories,
-    // getCategorie,
+    getCategorieById,
     createCategorie,
     // updateCategorie,
     // deleteCategorie
