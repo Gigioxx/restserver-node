@@ -1,6 +1,28 @@
 const { response } = require('express');
 const { Categorie } = require('../models')
 
+const getCategories = async( req, res = response ) => {
+
+    const { start = 0, limit = 5 } = req.query;
+    const filter = { status: true }
+
+    const [ total, categories ] = await Promise.all([
+        Categorie.countDocuments( filter ),
+        Categorie.find( filter )
+            .populate( 'user', 'name' )
+            .skip( Number(start) )
+            .limit( Number(limit) )
+    ]);
+    
+    res.json({
+        total,
+        categories
+    });
+
+}
+
+// getCategorie - populate
+
 
 const createCategorie = async( req, res = response ) => {
 
@@ -29,6 +51,14 @@ const createCategorie = async( req, res = response ) => {
 
 }
 
+// updateCategorie
+
+// deleteCategorie - status:false
+
 module.exports = {
+    getCategories,
+    // getCategorie,
     createCategorie,
+    // updateCategorie,
+    // deleteCategorie
 }
