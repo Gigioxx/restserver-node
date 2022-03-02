@@ -74,12 +74,20 @@ const updateCategorie = async( req, res = response ) => {
 
 }
 
-// deleteCategorie - status:false
+const deleteCategorie = async( req, res = response ) => {
+
+    const { id } = req.params;
+
+    const categorie = await Categorie.findByIdAndUpdate( id, { status: false }, { new: true } );
+
+    res.json( categorie );
+
+}
 
 module.exports = {
     getCategories,
     getCategorieById,
     createCategorie,
     updateCategorie,
-    // deleteCategorie
+    deleteCategorie
 }
