@@ -3,7 +3,7 @@ const { check } = require('express-validator');
 
 const { validateJWT, fieldsValidation } = require('../middlewares');
 
-const { getCategories, getCategorieById, createCategorie } = require('../controllers/categories');
+const { getCategories, getCategorieById, createCategorie, updateCategorie } = require('../controllers/categories');
 const { categorieByIdExists } = require('../helpers/db-validators');
 
 const router = Router();
@@ -28,9 +28,12 @@ router.post('/', [
 ], createCategorie );
 
 // Update register using id - private - only with valid token
-router.put('/:id', ( req, res ) => {
-    res.json('put');
-});
+router.put('/:id', [
+    validateJWT,
+    check( 'name', 'Name is required' ).not().isEmpty(),
+    check('id').custom( categorieByIdExists ),
+    fieldsValidation
+], updateCategorie );
 
 // Delete a categorie - only admin
 router.delete('/:id', ( req, res ) => {
