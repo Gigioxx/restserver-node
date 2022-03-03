@@ -3,7 +3,7 @@ const { check } = require('express-validator');
 
 const { validateJWT, fieldsValidation, isAdminRole } = require('../middlewares');
 
-const { getProducts, getProductById, createProduct } = require('../controllers/products');
+const { getProducts, getProductById, createProduct, updateProduct } = require('../controllers/products');
 const { productByIdExists, categorieByIdExists } = require('../helpers/db-validators');
 
 const router = Router();
@@ -30,7 +30,11 @@ router.post('/', [
 ], createProduct );
 
 // Update register using id - private - only with valid token
-// router.put('/:id', [], updateProduct );
+router.put('/:id', [
+    validateJWT,
+    check( 'id' ).custom( productByIdExists ),
+    fieldsValidation
+], updateProduct );
 
 // Delete a product - only admin
 // router.delete('/:id', [], deleteProduct );

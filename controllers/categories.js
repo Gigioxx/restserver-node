@@ -63,8 +63,6 @@ const updateCategorie = async( req, res = response ) => {
     const { id } = req.params;
     const { status, user, ...data } = req.body;
 
-    console.log('123');
-
     data.name = data.name.toUpperCase();
     data.user = req.user._id;
 

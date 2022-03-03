@@ -58,9 +58,19 @@ const createProduct = async( req, res = response ) => {
 
 }
 
-// const updateProduct = async( req, res = response ) => {
+const updateProduct = async( req, res = response ) => {
     
-// }
+    const { id } = req.params;
+    const { status, user, ...data } = req.body;
+
+    data.name = data.name.toUpperCase();
+    data.user = req.user._id;
+
+    const product = await Product.findByIdAndUpdate( id, data, { new: true } );
+
+    res.json( product );
+
+}
 
 // const deleteProduct = async( req, res = response ) => {
     
@@ -70,5 +80,6 @@ module.exports ={
     getProducts,
     getProductById,
     createProduct,
+    updateProduct,
 
 }
