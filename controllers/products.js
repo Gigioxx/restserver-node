@@ -21,9 +21,16 @@ const getProducts = async( req, res = response ) => {
 
 }
 
-// const getProductById = async( req, res = response ) => {
+const getProductById = async( req, res = response ) => {
     
-// }
+    const { id } = req.params;
+    const product = await Product.findById( id )
+                            .populate( 'user', 'name' )
+                            .populate( 'categorie', 'name' );
+
+    res.json( product );
+
+}
 
 const createProduct = async( req, res = response ) => {
     
@@ -61,6 +68,7 @@ const createProduct = async( req, res = response ) => {
 
 module.exports ={
     getProducts,
+    getProductById,
     createProduct,
 
 }

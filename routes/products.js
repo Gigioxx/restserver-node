@@ -3,7 +3,7 @@ const { check } = require('express-validator');
 
 const { validateJWT, fieldsValidation, isAdminRole } = require('../middlewares');
 
-const { getProducts, createProduct } = require('../controllers/products');
+const { getProducts, getProductById, createProduct } = require('../controllers/products');
 const { productByIdExists, categorieByIdExists } = require('../helpers/db-validators');
 
 const router = Router();
@@ -14,7 +14,11 @@ const router = Router();
 router.get('/', getProducts );
 
 // obtain a product - public
-// router.get('/:id', [], getProductById );
+router.get('/:id', [
+    check('id', 'ID is not a valid MongoID').isMongoId(),
+    check('id').custom( productByIdExists ),
+    fieldsValidation
+], getProductById );
 
 // create product - private - only with valid token
 router.post('/', [
