@@ -27,7 +27,7 @@ const ProductSchema = Schema({
     description: {
         type: String
     },
-    Available: {
+    available: {
         type: Boolean,
         default: true
     }
