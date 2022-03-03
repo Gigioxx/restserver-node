@@ -25,8 +25,8 @@ const getProductById = async( req, res = response ) => {
     
     const { id } = req.params;
     const product = await Product.findById( id )
-                            .populate( 'user', 'name' )
-                            .populate( 'categorie', 'name' );
+                            .populate('user', 'name')
+                            .populate('categorie', 'name');
 
     res.json( product );
 
@@ -36,7 +36,7 @@ const createProduct = async( req, res = response ) => {
     
     const { status, user, ...body } = req.body;
 
-    const productDB = await Producto.findOne({ name });
+    const productDB = await Product.findOne({ name: body.name });
 
     if ( productDB ) {
         return res.status(400).json({
