@@ -3,7 +3,7 @@ const { check } = require('express-validator');
 
 const { validateJWT, fieldsValidation, isAdminRole } = require('../middlewares');
 
-const { createProduct } = require('../controllers/products');
+const { getProducts, createProduct } = require('../controllers/products');
 const { productByIdExists, categorieByIdExists } = require('../helpers/db-validators');
 
 const router = Router();
@@ -11,7 +11,7 @@ const router = Router();
 // {{url}}/api/products
 
 // get all products - public
-// router.get('/', getProducts );
+router.get('/', getProducts );
 
 // obtain a product - public
 // router.get('/:id', [], getProductById );

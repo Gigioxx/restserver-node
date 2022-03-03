@@ -1,9 +1,25 @@
 const { response } = require ('express');
 const { Product } = require('../models');
 
-// const getProducts = async( req, res = response ) => {
+const getProducts = async( req, res = response ) => {
 
-// }
+    const { start = 0, limit = 5 } = req.query;
+    const filter = { status: true }
+
+    const [ total, products ] = await Promise.all([
+        Product.countDocuments( filter ),
+        Product.find( filter )
+            .populate( 'user', 'name' )
+            .skip( Number(start) )
+            .limit( Number(limit) )
+    ]);
+
+    res.json({
+        total,
+        products
+    });
+
+}
 
 // const getProductById = async( req, res = response ) => {
     
@@ -44,6 +60,7 @@ const createProduct = async( req, res = response ) => {
 // }
 
 module.exports ={
+    getProducts,
     createProduct,
 
 }
