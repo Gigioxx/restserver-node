@@ -3,7 +3,7 @@ const { check } = require('express-validator');
 
 const { validateJWT, fieldsValidation, isAdminRole } = require('../middlewares');
 
-const { getProducts, getProductById, createProduct, updateProduct } = require('../controllers/products');
+const { getProducts, getProductById, createProduct, updateProduct, deleteProduct } = require('../controllers/products');
 const { productByIdExists, categorieByIdExists } = require('../helpers/db-validators');
 
 const router = Router();
@@ -37,6 +37,12 @@ router.put('/:id', [
 ], updateProduct );
 
 // Delete a product - only admin
-// router.delete('/:id', [], deleteProduct );
+router.delete('/:id', [
+    validateJWT,
+    isAdminRole,
+    check( 'id', 'ID is not a valid MongoID' ).isMongoId(),
+    check( 'id' ).custom( productByIdExists ),
+    fieldsValidation
+], deleteProduct );
 
 module.exports = router;

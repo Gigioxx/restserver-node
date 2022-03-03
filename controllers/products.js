@@ -72,14 +72,20 @@ const updateProduct = async( req, res = response ) => {
 
 }
 
-// const deleteProduct = async( req, res = response ) => {
+const deleteProduct = async( req, res = response ) => {
     
-// }
+    const { id } = req.params;
+
+    const product = await Product.findByIdAndUpdate( id, { status: false }, { new: true } );
+
+    res.json( product );
+
+}
 
 module.exports ={
     getProducts,
     getProductById,
     createProduct,
     updateProduct,
-
+    deleteProduct
 }
