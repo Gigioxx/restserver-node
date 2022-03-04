@@ -1,6 +1,6 @@
 const { response } = require('express');
 const { ObjectId } = require('mongoose').Types;
-const { User, Categorie } = require('../models');
+const { User, Categorie, Product } = require('../models');
 
 const allowedCollections = [
     'users',
@@ -54,6 +54,28 @@ const searchCategories = async( term = '', res = response ) => {
 
 }
 
+const searchProducts = async( term = '', res = response ) => {
+
+    const isMongoID = ObjectId.isValid( term );
+
+    if ( isMongoID ) {
+        const product = await Product.findById( term ).populate('categorie', 'name');
+        return res.json({
+            results: ( product ) ? [ product ] : []
+        });
+    }
+    
+    const regex = new RegExp( term, 'i' );
+
+    const products = await Product.find({ name: regex, status: true })
+                            .populate('categorie', 'name');
+
+    res.json({
+        results: products
+    });
+
+}
+
 const search = ( req, res = response ) => {
 
     const { collection, term } = req.params;
@@ -75,7 +97,7 @@ const search = ( req, res = response ) => {
         break;
 
         case 'products':
-
+            searchProducts( term, res );
         break;
 
         default:
