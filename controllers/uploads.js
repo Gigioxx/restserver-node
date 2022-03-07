@@ -1,39 +1,15 @@
-const path = require('path');
-const { v4: uuidv4 } = require('uuid');
-
 const { response } = require('express');
+const { uploadFile } = require('../helpers');
 
-const loadFile = ( req, res = response ) => {
+const loadFile = async( req, res = response ) => {
 
     if ( !req.files || Object.keys(req.files).length === 0 || !req.files.file ) {
         return res.status(400).json({ msg: 'No files were uploaded.' });
     }
     
-    const { file } = req.files;
-    const shortName = file.name.split('.');
-    const extension = shortName[ shortName.length - 1 ];
+    const fileName = await uploadFile( req.files );
 
-    // Validate Extension
-    const validExtensions = [ 'png', 'jpg', 'jpeg', 'gif' ];
-
-    if ( !validExtensions.includes( extension ) ) {
-        return res.status(400).json({
-            msg: `${ extension } extension is not allowed, ${ validExtensions }`
-        });
-    }
-
-    const tempName = uuidv4() + '.' + extension;
-
-    const uploadPath = path.join( __dirname, '../uploads/', tempName );
-
-    // Use the mv() method to place the file somewhere on your server
-    file.mv(uploadPath, (err) => {
-        if (err) {
-            return res.status(500).json({ err });
-        }
-
-        res.json({ msg: 'File uploaded to ' + uploadPath });
-    });
+    res.json({ fileName });
 
 }
 
