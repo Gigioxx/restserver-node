@@ -11,7 +11,7 @@ const uploadFile = ( files, validImageExtensions = [ 'png', 'jpg', 'jpeg', 'gif'
 
         // Validate file extension
         if ( !validImageExtensions.includes( extension ) ) {
-            return reject( `${ extension } extension is not allowed, ${ validImageExtensions }` );
+            return reject( `${ extension } extension is not allowed. Valid extensions: ${ validImageExtensions }` );
         }
 
         const tempName = uuidv4() + '.' + extension;

@@ -7,9 +7,14 @@ const loadFile = async( req, res = response ) => {
         return res.status(400).json({ msg: 'No files were uploaded.' });
     }
     
-    const fileName = await uploadFile( req.files );
-
-    res.json({ fileName });
+    try {
+        // const fileName = await uploadFile( req.files, [ 'txt', 'md' ], 'textFiles' );
+        const fileName = await uploadFile( req.files, undefined, 'images' );
+        res.json({ fileName });
+        
+    } catch (error) {
+        res.status(400).json({ error });
+    }
 
 }
 
