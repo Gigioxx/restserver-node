@@ -1,4 +1,5 @@
 const path = require('path');
+const { v4: uuidv4 } = require('uuid');
 
 const { response } = require('express');
 
@@ -21,7 +22,9 @@ const loadFile = ( req, res = response ) => {
         });
     }
 
-    const uploadPath = path.join( __dirname, '../uploads/', file.name );
+    const tempName = uuidv4() + '.' + extension;
+
+    const uploadPath = path.join( __dirname, '../uploads/', tempName );
 
     // Use the mv() method to place the file somewhere on your server
     file.mv(uploadPath, (err) => {
