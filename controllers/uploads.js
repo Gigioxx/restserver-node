@@ -9,6 +9,18 @@ const loadFile = ( req, res = response ) => {
     }
     
     const { file } = req.files;
+    const shortName = file.name.split('.');
+    const extension = shortName[ shortName.length - 1 ];
+
+    // Validate Extension
+    const validExtensions = [ 'png', 'jpg', 'jpeg', 'gif' ];
+
+    if ( !validExtensions.includes( extension ) ) {
+        return res.status(400).json({
+            msg: `${ extension } extension is not allowed, ${ validExtensions }`
+        });
+    }
+
     const uploadPath = path.join( __dirname, '../uploads/', file.name );
 
     // Use the mv() method to place the file somewhere on your server
