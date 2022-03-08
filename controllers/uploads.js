@@ -1,3 +1,6 @@
+const path = require('path');
+const fs = require('fs');
+
 const { response } = require('express');
 const { uploadFile } = require('../helpers');
 
@@ -45,6 +48,15 @@ const updateImage = async( req, res = response ) => {
             return res.status(500).json({
                 msg: 'This option is not available yet'
             });
+    }
+
+    // Clean previously uploaded images
+    if ( model.img ) {
+        // Delete image from server
+        const imagePath = path.join( __dirname, '../uploads', collection, model.img );
+        if ( fs.existsSync( imagePath ) ) {
+            fs.unlinkSync( imagePath );
+        }
     }
 
     const fileName = await uploadFile( req.files, undefined, collection );
