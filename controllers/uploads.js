@@ -105,7 +105,11 @@ const updateImageCloudinary = async( req, res = response ) => {
     // Clean previously uploaded images
     if ( model.img ) {
         // Delete image from cloudinary
-        // Pending
+        const nameArr = model.img.split( '/' );
+        const name = nameArr[ nameArr.length - 1 ];
+        const [ public_id ] = name.split( '.' );
+        cloudinary.uploader.destroy( public_id );
+
     }
 
     const { tempFilePath } = req.files.file;
