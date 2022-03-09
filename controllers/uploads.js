@@ -64,11 +64,56 @@ const updateImage = async( req, res = response ) => {
 
     await model.save();
 
-    res.json({ model });
+    res.json( model );
+
+}
+
+const showImage = async( req, res = response ) => {
+
+    const { id, collection } = req.params;
+
+    let model;
+
+    switch ( collection ) {
+        case 'users':
+            model = await User.findById( id );
+            if ( !model ) {
+                return res.status(400).json({
+                    msg: `User with ID ${ id }, does not exist.`
+                });
+            }
+        break;
+
+        case 'products':
+            model = await Product.findById( id );
+            if ( !model ) {
+                return res.status(400).json({
+                    msg: `Product with ID ${ id }, does not exist.`
+                });
+            }
+        break;
+    
+        default:
+            return res.status(500).json({
+                msg: 'This option is not available yet'
+            });
+    }
+
+    // Clean previously uploaded images
+    if ( model.img ) {
+        // Delete image from server
+        const imagePath = path.join( __dirname, '../uploads', collection, model.img );
+        if ( fs.existsSync( imagePath ) ) {
+            return res.sendFile( imagePath );
+        }
+    }
+
+    res.json({ msg: 'PlaceHolder pending' });
 
 }
 
 module.exports = {
     loadFile,
-    updateImage
+    updateImage,
+    showImage
 }
