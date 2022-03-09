@@ -108,7 +108,8 @@ const showImage = async( req, res = response ) => {
         }
     }
 
-    res.json({ msg: 'PlaceHolder pending' });
+    const noImagePath = path.join( __dirname, '../assets/no-image.jpeg' );
+    res.sendFile( noImagePath );
 
 }
 
