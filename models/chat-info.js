@@ -42,6 +42,4 @@ class ChatInfo {
 
 }
 
-module.exports = {
-    ChatInfo
-}
+module.exports = ChatInfo;

@@ -1,7 +1,10 @@
 const { Socket } = require('socket.io');
 const { checkJWT } = require('../helpers');
+const { ChatInfo } = require('../models');
 
-const socketController = async( socket = new Socket() ) => {
+const chatInfo = new ChatInfo();
+
+const socketController = async( socket = new Socket(), io ) => {
 
     const user = await checkJWT( socket.handshake.headers['x-token'] );
 
@@ -9,7 +12,15 @@ const socketController = async( socket = new Socket() ) => {
         return socket.disconnect();
     }
 
-    console.log( `User: ${ user.name }, connected!` );
+    // Add connected user
+    chatInfo.connectUser( user );
+    io.emit( 'active-users', chatInfo.usersArr );
+
+    // Clean when someone disconnects
+    socket.on('disconnect', () => {
+        chatInfo.disconnectUser( user.id );
+        io.emit( 'active-users', chatInfo.usersArr );
+    });
 
 }
 
