@@ -15,6 +15,7 @@ const socketController = async( socket = new Socket(), io ) => {
     // Add connected user
     chatInfo.connectUser( user );
     io.emit( 'active-users', chatInfo.usersArr );
+    socket.emit( 'receive-messages', chatInfo.last10 );
 
     // Clean when someone disconnects
     socket.on('disconnect', () => {
@@ -25,7 +26,7 @@ const socketController = async( socket = new Socket(), io ) => {
     socket.on('send-message', ({ uid, message }) => {
         
         chatInfo.sendMessage( user.id, user.name, message );
-        io.emit('receive-messages', chatInfo.last10 );
+        io.emit( 'receive-messages', chatInfo.last10 );
 
     });
 

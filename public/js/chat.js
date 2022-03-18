@@ -52,13 +52,9 @@ const connectSocket = async() => {
         console.log('Sockets offline');
     });
 
-    socket.on('receive-messages', (payload) => {
-        console.log(payload)
-    });
+    socket.on('receive-messages', showMessages );
     
-    socket.on('active-users', ( payload ) => {
-        showUsers( payload );
-    });
+    socket.on('active-users', showUsers );
 
     socket.on('private-message', () => {
         // Pending
@@ -87,6 +83,27 @@ const showUsers = ( users = [] ) => {
 
 }
 
+const showMessages = ( messages = [] ) => {
+
+    let messagesHtml = '';
+    messages.forEach( ({ name, message }) => {
+
+        messagesHtml += `
+            <li>
+                <p>
+                    <span class="text-primary"> ${ name }: </span>
+                    <span> ${ message } </span>
+                </p>
+            </li>
+        
+        `;
+
+    });
+
+    ulMessages.innerHTML = messagesHtml;
+
+}
+
 txtMessage.addEventListener('keyup', ({ keyCode }) => {
     
     const message = txtMessage.value;
@@ -98,7 +115,7 @@ txtMessage.addEventListener('keyup', ({ keyCode }) => {
     socket.emit('send-message', { message, uid } );
 
     txtMessage.value = '';
-    
+
 })
 
 const main = async() => {
