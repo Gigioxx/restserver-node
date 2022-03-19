@@ -17,6 +17,9 @@ const socketController = async( socket = new Socket(), io ) => {
     io.emit( 'active-users', chatInfo.usersArr );
     socket.emit( 'receive-messages', chatInfo.last10 );
 
+    // Connect to special room
+    socket.join( user.id );
+
     // Clean when someone disconnects
     socket.on('disconnect', () => {
         chatInfo.disconnectUser( user.id );
@@ -24,9 +27,16 @@ const socketController = async( socket = new Socket(), io ) => {
     });
 
     socket.on('send-message', ({ uid, message }) => {
-        
-        chatInfo.sendMessage( user.id, user.name, message );
-        io.emit( 'receive-messages', chatInfo.last10 );
+
+        if ( uid ) {
+            // Private message
+            socket.to( uid ).emit( 'private-message', { from: user.name, message })
+
+        } else {
+            chatInfo.sendMessage( user.id, user.name, message );
+            io.emit( 'receive-messages', chatInfo.last10 );
+
+        }
 
     });
 

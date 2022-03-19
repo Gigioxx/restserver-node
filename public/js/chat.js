@@ -56,8 +56,8 @@ const connectSocket = async() => {
     
     socket.on('active-users', showUsers );
 
-    socket.on('private-message', () => {
-        // Pending
+    socket.on('private-message', ( payload ) => {
+        console.log('Private:', payload);
     });
 
 }
